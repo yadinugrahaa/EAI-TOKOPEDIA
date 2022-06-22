@@ -1,12 +1,11 @@
 <?php
-
 namespace App\Http\Controllers;
-use App\Models\Deliver;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use Validator;
 use Symfony\Component\HttpFoundation\Response;
 
-class DeliveryController extends Controller
+class PaymentController extends Controller
 {  
     /**
      * Display a listing of the resource.
@@ -15,7 +14,7 @@ class DeliveryController extends Controller
      */
     public function index()
     {
-        $seller = Deliver::orderBy('time', 'DESC')->get();
+        $seller = Payment::orderBy('time', 'DESC')->get();
         $response = [
             'message' => 'Your request has been processed successfully',
             'data' => $seller 
@@ -34,13 +33,9 @@ class DeliveryController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'id_transactions'   => ['numeric'],
-            'product_name'       => [],
-            'buyer_address'         => [],
-            'product_weight'      => ['numeric'],
-            'delivery_fee'      => ['numeric'],
-            'status'          =>[],
-            'no_resi'          =>[],
+            'id_orders'         => ['numeric'],
+            'nominal_payment'       => ['required','numeric'],
+            'status_payment'          =>['required','in:paid,unpaid'],
 
         ]);
 
@@ -49,9 +44,9 @@ class DeliveryController extends Controller
         }
 
         try {
-            $seller = Deliver::create($request->all());
+            $seller = Payment::create($request->all());
             $response = [
-                'message' => 'Delivery Created',
+                'message' => 'Payment Created',
                 'data' => $seller
             ];
 
@@ -73,9 +68,9 @@ class DeliveryController extends Controller
     {
 
 
-        $seller = Deliver::findOrFail($id);
+        $seller = Payment::findOrFail($id);
         $response = [
-            'message' => 'Detail or Data resource',
+            'message' => 'Detail or Data Resource',
             'data' => $seller
         ];
 
@@ -92,16 +87,12 @@ class DeliveryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $seller = Deliver::findOrFail($id);
+        $seller = Payment::findOrFail($id);
 
         $validator = Validator::make($request->all(),[
-            'id_transactions'   => ['numeric'],
-            'product_name'       => [],
-            'buyer_address'         => [],
-            'product_weight'      => ['numeric'],
-            'delivery_fee'      => ['numeric'],
-            'status'          =>[],
-            'no_resi'          =>[],
+            'id_orders'   => ['numeric'],
+            'nominal_payment'       => ['numeric'],
+            'status_payment'          =>['in:paid,unpaid'],
         ]);
 
         if ($validator->fails()){
@@ -111,7 +102,7 @@ class DeliveryController extends Controller
         try {
             $seller->update($request->all());
             $response = [
-                'message' => 'Delivery updated',
+                'message' => 'Payment updated',
                 'data' => $seller
             ];
 
@@ -131,7 +122,7 @@ class DeliveryController extends Controller
      */
     public function destroy($id)
     {
-        $seller = Deliver::findOrFail($id);
+        $seller = Payment::findOrFail($id);
         try {
             $seller->delete();
             $response = [
