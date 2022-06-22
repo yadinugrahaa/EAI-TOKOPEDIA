@@ -17,7 +17,6 @@ class ProductController extends Controller
     {
         $seller = Product::orderBy('time', 'DESC')->get();
         $response = [
-            'code' => "200",
             'message' => 'Your request has been processed successfully',
             'data' => $seller 
         ];
@@ -51,7 +50,6 @@ class ProductController extends Controller
         try {
             $seller = Product::create($request->all());
             $response = [
-                'code' => "200",
                 'message' => 'Product Created',
                 'data' => $seller
             ];
@@ -59,7 +57,6 @@ class ProductController extends Controller
             return response()->json($response, Response::HTTP_CREATED);
         } catch (QuearyException $e) {
             return response()->json([
-                'code' => "400",
                 'message' => "Failed" . $e->errorInfo
             ]);
         }
@@ -77,7 +74,6 @@ class ProductController extends Controller
 
         $seller = Product::findOrFail($id);
         $response = [
-            'code' => "200",
             'message' => 'Detail or Data Resource',
             'data' => $seller
         ];
@@ -112,7 +108,6 @@ class ProductController extends Controller
         try {
             $seller->update($request->all());
             $response = [
-                'code' => "200",
                 'message' => 'Product updated',
                 'data' => $seller
             ];
@@ -120,7 +115,6 @@ class ProductController extends Controller
             return response()->json($response, Response::HTTP_OK);
         } catch (QuearyException $e) {
             return response()->json([
-                'code' => "400",
                 'message' => "Failed" . $e->errorInfo
             ]);
         }
@@ -138,14 +132,12 @@ class ProductController extends Controller
         try {
             $seller->delete();
             $response = [
-                'code' => "200",
                 'message' => 'Success deleted',
             ];
 
             return response()->json($response, Response::HTTP_OK);
         } catch (QuearyException $e) {
             return response()->json([
-                'code' => "400",
                 'message' => "Failed" . $e->errorInfo
             ]);
         }

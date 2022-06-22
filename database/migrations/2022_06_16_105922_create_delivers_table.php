@@ -15,14 +15,14 @@ class CreateDeliversTable extends Migration
     {
         Schema::create('delivers', function (Blueprint $table) {
             $table->id();
-            $table->string('id_transaction');
+            $table->string('id_transactions');
             $table->string('product_name');
             $table->string('buyer_address');
             $table->string('product_weight');
             $table->string('delivery_fee');
             $table->timestamp('time')->default(now());
-            $table->string('status')->default(null);            
-            $table->string('no_resi')->default(null);            
+            $table->string('status')-> default(null);;
+            $table->string('no_resi')-> default(null);;
             $table->timestamps();
         });
     }

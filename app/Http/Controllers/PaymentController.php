@@ -17,7 +17,6 @@ class PaymentController extends Controller
     {
         $seller = Payment::orderBy('time', 'DESC')->get();
         $response = [
-            'code' => "200",
             'message' => 'Your request has been processed successfully',
             'data' => $seller 
         ];
@@ -58,13 +57,13 @@ class PaymentController extends Controller
         ]);
         if ($seller) {
             return response()->json([
-                'code' => "200",
+                'success' => true,
                 'message' => 'Payment Created',
                 'data' => $seller,
             ]);
         } else {
             return response()->json([
-                'code'    => "400",
+                'success' => false,
                 'message' => 'Failed' 
             ]);
         }
@@ -82,7 +81,6 @@ class PaymentController extends Controller
 
         $seller = Payment::findOrFail($id);
         $response = [
-            'code' => "200",
             'message' => 'Detail or Data Resource',
             'data' => $seller
         ];
@@ -126,13 +124,13 @@ class PaymentController extends Controller
 
         if ($seller) {
             return response()->json([
-                'code' => "200",
+                'success' => true,
                 'message' => 'Payment Updated',
                 'data' => $seller,
             ]);
         } else {
             return response()->json([
-                'code' => "400",
+                'success' => false,
                 'message' => 'Failed' 
             ]);
         }
@@ -150,14 +148,12 @@ class PaymentController extends Controller
         try {
             $seller->delete();
             $response = [
-                'code' => "200",
                 'message' => 'Success deleted',
             ];
 
             return response()->json($response, Response::HTTP_OK);
         } catch (QueryException $e) {
             return response()->json([
-                'code' => "400",
                 'message' => "Failed" . $e->errorInfo
             ]);
         }

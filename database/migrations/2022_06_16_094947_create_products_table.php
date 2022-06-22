@@ -20,7 +20,6 @@ class CreateProductsTable extends Migration
             $table->string('product_total');
             $table->string('product_price');
             $table->timestamp('time')->default(now());
-            $table->enum('availablity',['ready','sold']);
             $table->timestamps();
         });
     }

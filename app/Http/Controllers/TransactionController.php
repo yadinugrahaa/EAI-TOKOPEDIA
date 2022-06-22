@@ -17,7 +17,6 @@ class TransactionController extends Controller
     {
         $transactions = Transactions::orderBy('id', 'DESC')->get();
         $response = [
-            'code' => "200",
             'message' => 'Your request has been processed successfully',
             'data' => $transactions
         ];

@@ -15,11 +15,10 @@ class DeliveryController extends Controller
      */
     public function index()
     {
-        $delivers = Deliver::orderBy('time', 'DESC')->get();
+        $seller = Deliver::orderBy('time', 'DESC')->get();
         $response = [
-            'code' => "200",
             'message' => 'Your request has been processed successfully',
-            'data' => $delivers
+            'data' => $seller 
         ];
 
         return response()->json($response, Response::HTTP_OK);
@@ -35,13 +34,13 @@ class DeliveryController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'id_transaction'   => ['numeric'],
+            'id_transactions'   => ['numeric'],
             'product_name'       => [],
             'buyer_address'         => [],
             'product_weight'      => ['numeric'],
             'delivery_fee'      => ['numeric'],
-            'status'          =>[''],
-            'no_resi'         =>[''],
+            'status'          =>[],
+            'no_resi'          =>[],
 
         ]);
 
@@ -52,7 +51,6 @@ class DeliveryController extends Controller
         try {
             $seller = Deliver::create($request->all());
             $response = [
-                'code' => "200",
                 'message' => 'Delivery Created',
                 'data' => $seller
             ];
@@ -60,7 +58,6 @@ class DeliveryController extends Controller
             return response()->json($response, Response::HTTP_CREATED);
         } catch (QuearyException $e) {
             return response()->json([
-                'code' => "400",
                 'message' => "Failed" . $e->errorInfo
             ]);
         }
@@ -78,7 +75,6 @@ class DeliveryController extends Controller
 
         $seller = Deliver::findOrFail($id);
         $response = [
-            'code' => "200",
             'message' => 'Detail or Data resource',
             'data' => $seller
         ];
@@ -99,14 +95,13 @@ class DeliveryController extends Controller
         $seller = Deliver::findOrFail($id);
 
         $validator = Validator::make($request->all(),[
-            'id_transaction'   => ['numeric'],
+            'id_transactions'   => ['numeric'],
             'product_name'       => [],
             'buyer_address'         => [],
             'product_weight'      => ['numeric'],
             'delivery_fee'      => ['numeric'],
-            'status'          =>[''],
-            'no_resi'         =>[''],
-
+            'status'          =>[],
+            'no_resi'          =>[],
         ]);
 
         if ($validator->fails()){
@@ -116,7 +111,6 @@ class DeliveryController extends Controller
         try {
             $seller->update($request->all());
             $response = [
-                'code' => "200",
                 'message' => 'Delivery updated',
                 'data' => $seller
             ];
@@ -124,7 +118,6 @@ class DeliveryController extends Controller
             return response()->json($response, Response::HTTP_OK);
         } catch (QuearyException $e) {
             return response()->json([
-                'code' => "400",
                 'message' => "Failed" . $e->errorInfo
             ]);
         }
@@ -142,14 +135,12 @@ class DeliveryController extends Controller
         try {
             $seller->delete();
             $response = [
-                'code' => "200",
                 'message' => 'Success deleted',
             ];
 
             return response()->json($response, Response::HTTP_OK);
         } catch (QuearyException $e) {
             return response()->json([
-                'code' => "400",
                 'message' => "Failed" . $e->errorInfo
             ]);
         }
