@@ -15,10 +15,14 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('id_payment');
+            $table->string('seller_name');
+            $table->string('buyer_name');
+            $table->string('buyer_address');
+            $table->string('product_name');
+            $table->string('nominal_payment');
             $table->string('delivery_fee');
             $table->string('total_payment');
-            $table->string('price');
+            $table->timestamp('time')->default(now());
             $table->enum('status_payment',['paid','unpaid']);
             $table->timestamps();
         });

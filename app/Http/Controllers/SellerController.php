@@ -34,11 +34,12 @@ class SellerController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'seller_name'   => [],
-            'address'       => [],
-            'phone'         => ['numeric'],
-            'city'      => [''],
-            'postalcode'      => [''],
+            'id_delivery'   => ['numeric'],
+            'seller_name'   => ['required'],
+            'address'       => ['required'],
+            'phone'         => ['required','numeric'],
+            'city'      => ['required'],
+            'type'          =>['required','in:active, non-active'],
         ]);
 
         if ($validator->fails()){
@@ -48,7 +49,6 @@ class SellerController extends Controller
         try {
             $seller = Seller::create($request->all());
             $response = [
-                'code' => "200",
                 'message' => 'Seller Created',
                 'data' => $seller
             ];
@@ -56,7 +56,6 @@ class SellerController extends Controller
             return response()->json($response, Response::HTTP_CREATED);
         } catch (QuearyException $e) {
             return response()->json([
-                'code' => "400",
                 'message' => "Failed" . $e->errorInfo
             ]);
         }
@@ -74,7 +73,6 @@ class SellerController extends Controller
 
         $seller = Seller::findOrFail($id);
         $response = [
-            'code' => "200",
             'message' => 'Detail or Data resource',
             'data' => $seller
         ];
@@ -95,11 +93,12 @@ class SellerController extends Controller
         $seller = Seller::findOrFail($id);
 
         $validator = Validator::make($request->all(),[
+            'id_delivery'   => ['numeric'],
             'seller_name'   => [],
             'address'       => [],
             'phone'         => ['numeric'],
-            'city'      => [''],
-            'postalcode'      => [''],
+            'district'      => [],
+            'type'          =>['in:active,non-active'],
         ]);
 
         if ($validator->fails()){
@@ -109,7 +108,6 @@ class SellerController extends Controller
         try {
             $seller->update($request->all());
             $response = [
-                'code' => "200",
                 'message' => 'Seller updated',
                 'data' => $seller
             ];
@@ -117,7 +115,6 @@ class SellerController extends Controller
             return response()->json($response, Response::HTTP_OK);
         } catch (QuearyException $e) {
             return response()->json([
-                'code' => "400",
                 'message' => "Failed" . $e->errorInfo
             ]);
         }
@@ -135,14 +132,12 @@ class SellerController extends Controller
         try {
             $seller->delete();
             $response = [
-                'code' => "200",
-                'message' => 'Success deleted'
+                'message' => 'Success deleted',
             ];
 
             return response()->json($response, Response::HTTP_OK);
         } catch (QuearyException $e) {
             return response()->json([
-                'code' => "400",
                 'message' => "Failed" . $e->errorInfo
             ]);
         }

@@ -2,9 +2,8 @@
 namespace App\Http\Controllers;
 use App\Models\Payment;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Validator;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Database\QueryException;
 
 class PaymentController extends Controller
 {  
@@ -35,8 +34,7 @@ class PaymentController extends Controller
     {
         $validator = Validator::make($request->all(),[
             'id_orders'         => ['numeric'],
-            'price'       => ['required','numeric'],
-            'delivery_fee'       => ['required','numeric'],
+            'nominal_payment'       => ['required','numeric'],
             'status_payment'          =>['required','in:paid,unpaid'],
 
         ]);
@@ -45,26 +43,17 @@ class PaymentController extends Controller
             return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $deliveryfee = $request -> input('delivery_fee');
-        $price = $request -> input('price');
-        $nominal = $deliveryfee + $price;
-        $seller = Payment::create([
-            'id_orders'         => $request->input('id_orders'),
-            'price'       =>  $price,
-            'delivery_fee'       => $deliveryfee,
-            'status_payment'          =>$request->input('status_payment'),
-            'nominal' => $nominal
-        ]);
-        if ($seller) {
-            return response()->json([
-                'success' => true,
+        try {
+            $seller = Payment::create($request->all());
+            $response = [
                 'message' => 'Payment Created',
-                'data' => $seller,
-            ]);
-        } else {
+                'data' => $seller
+            ];
+
+            return response()->json($response, Response::HTTP_CREATED);
+        } catch (QuearyException $e) {
             return response()->json([
-                'success' => false,
-                'message' => 'Failed' 
+                'message' => "Failed" . $e->errorInfo
             ]);
         }
     }
@@ -101,37 +90,26 @@ class PaymentController extends Controller
         $seller = Payment::findOrFail($id);
 
         $validator = Validator::make($request->all(),[
-            'id_orders'         => ['numeric'],
-            'price'       => ['required','numeric'],
-            'delivery_fee'       => ['required','numeric'],
-            'status_payment'          =>['required','in:paid,unpaid'],
+            'id_orders'   => ['numeric'],
+            'nominal_payment'       => ['numeric'],
+            'status_payment'          =>['in:paid,unpaid'],
         ]);
 
         if ($validator->fails()){
             return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $deliveryfee = $request -> input('delivery_fee');
-        $price = $request -> input('price');
-        $nominal = $deliveryfee + $price;
-        $seller->update([
-            'id_orders'         => $request->input('id_orders'),
-            'price'       =>  $price,
-            'delivery_fee'       => $deliveryfee,
-            'status_payment'          =>$request->input('status_payment'),
-            'nominal' => $nominal
-        ]);
+        try {
+            $seller->update($request->all());
+            $response = [
+                'message' => 'Payment updated',
+                'data' => $seller
+            ];
 
-        if ($seller) {
+            return response()->json($response, Response::HTTP_OK);
+        } catch (QuearyException $e) {
             return response()->json([
-                'success' => true,
-                'message' => 'Payment Updated',
-                'data' => $seller,
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed' 
+                'message' => "Failed" . $e->errorInfo
             ]);
         }
     }
@@ -152,7 +130,7 @@ class PaymentController extends Controller
             ];
 
             return response()->json($response, Response::HTTP_OK);
-        } catch (QueryException $e) {
+        } catch (QuearyException $e) {
             return response()->json([
                 'message' => "Failed" . $e->errorInfo
             ]);

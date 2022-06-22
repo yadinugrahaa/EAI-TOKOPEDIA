@@ -15,15 +15,15 @@ class CreateSellersTable extends Migration
     {
         Schema::create('sellers', function (Blueprint $table) {
             $table->id();
+            $table->string('id_delivery');
             $table->string('seller_name');
             $table->string('address');
             $table->double('phone');
             $table->string('city');
             $table->string('postalcode');
             $table->timestamp('time')->default(now());
-            $table->softDeletes();
+            $table->enum('type',['active','non-active']);
             $table->timestamps();
-            
         });
     }
 
