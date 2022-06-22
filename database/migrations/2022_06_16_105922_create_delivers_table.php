@@ -1,39 +1,141 @@
 <?php
+namespace App\Http\Controllers;
+use App\Models\Payment;
+use Illuminate\Http\Request;
+use Validator;
+use Symfony\Component\HttpFoundation\Response;
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
-
-class CreateDeliversTable extends Migration
-{
+class PaymentController extends Controller
+{  
     /**
-     * Run the migrations.
+     * Display a listing of the resource.
      *
-     * @return void
+     * @return \Illuminate\Http\Response
      */
-    public function up()
+    public function index()
     {
-        Schema::create('delivers', function (Blueprint $table) {
-            $table->id();
-            $table->string('id_transactions');
-            $table->string('product_name');
-            $table->string('buyer_address');
-            $table->string('product_weight');
-            $table->string('delivery_fee');
-            $table->timestamp('time')->default(now());
-            $table->string('status')-> default(null);;
-            $table->string('no_resi')-> default(null);;
-            $table->timestamps();
-        });
+        $seller = Payment::orderBy('time', 'DESC')->get();
+        $response = [
+            'message' => 'Your request has been processed successfully',
+            'data' => $seller 
+        ];
+
+        return response()->json($response, Response::HTTP_OK);
+    }
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+            'id_orders'         => ['numeric'],
+            'nominal_payment'       => ['required','numeric'],
+            'status_payment'          =>['required','in:paid,unpaid'],
+
+        ]);
+
+        if ($validator->fails()){
+            return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        try {
+            $seller = Payment::create($request->all());
+            $response = [
+                'message' => 'Payment Created',
+                'data' => $seller
+            ];
+
+            return response()->json($response, Response::HTTP_CREATED);
+        } catch (QuearyException $e) {
+            return response()->json([
+                'message' => "Failed" . $e->errorInfo
+            ]);
+        }
     }
 
     /**
-     * Reverse the migrations.
+     * Display the specified resource.
      *
-     * @return void
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function down()
+    public function show($id)
     {
-        Schema::dropIfExists('delivers');
+
+
+        $seller = Payment::findOrFail($id);
+        $response = [
+            'message' => 'Detail or Data Resource',
+            'data' => $seller
+        ];
+
+        return response()->json($response, Response::HTTP_OK);
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $seller = Payment::findOrFail($id);
+
+        $validator = Validator::make($request->all(),[
+            'id_orders'   => ['numeric'],
+            'nominal_payment'       => ['numeric'],
+            'status_payment'          =>['in:paid,unpaid'],
+        ]);
+
+        if ($validator->fails()){
+            return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        try {
+            $seller->update($request->all());
+            $response = [
+                'message' => 'Payment updated',
+                'data' => $seller
+            ];
+
+            return response()->json($response, Response::HTTP_OK);
+        } catch (QuearyException $e) {
+            return response()->json([
+                'message' => "Failed" . $e->errorInfo
+            ]);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $seller = Payment::findOrFail($id);
+        try {
+            $seller->delete();
+            $response = [
+                'message' => 'Success deleted',
+            ];
+
+            return response()->json($response, Response::HTTP_OK);
+        } catch (QuearyException $e) {
+            return response()->json([
+                'message' => "Failed" . $e->errorInfo
+            ]);
+        }
+
+                
     }
 }
