@@ -15,7 +15,7 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $transactions = Transactions::orderBy('time', 'DESC')->get();
+        $transactions = Transactions::orderBy('id', 'DESC')->get();
         $response = [
             'message' => 'Your request has been processed successfully',
             'data' => $transactions
@@ -34,14 +34,12 @@ class TransactionController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'seller_name'   => ['required'],
-            'buyer_name'       => ['required'],
-            'buyer_address'         => ['required'],
-            'product_name'      => ['required'],
-            'nominal_payment'      => ['required','numeric'],
-            'delivery_fee'      => ['required','numeric'],
-            'total_payment'      => ['required','numeric'],
-            'status_payment'          =>['required','in:paid,unpaid'],
+            'id_payment'         => ['numeric'],
+            'delivery_fee'       => ['numeric'],
+            'total_payment'      => ['numeric'],
+            'price'              => ['numeric'],
+            'status_payment'     =>['in:paid,unpaid'],
+    
 
 
         ]);
@@ -53,6 +51,7 @@ class TransactionController extends Controller
         try {
             $transactions = Transactions::create($request->all());
             $response = [
+                'code' => "200",
                 'message' => 'Transactions Created',
                 'data' => $transactions
             ];
@@ -60,6 +59,7 @@ class TransactionController extends Controller
             return response()->json($response, Response::HTTP_CREATED);
         } catch (QuearyException $e) {
             return response()->json([
+                'code' => "400",
                 'message' => "Failed" . $e->errorInfo
             ]);
         }
@@ -77,6 +77,7 @@ class TransactionController extends Controller
 
         $transactions = Transactions::findOrFail($id);
         $response = [
+            'code' => "200",
             'message' => 'Detail or Data resource',
             'data' => $transactions
         ];
@@ -97,14 +98,11 @@ class TransactionController extends Controller
         $transactions = Transactions::findOrFail($id);
 
         $validator = Validator::make($request->all(),[
-            'seller_name'   => [],
-            'buyer_name'       => [],
-            'buyer_address'         => [],
-            'product_name'      => [],
-            'nominal_payment'      => ['numeric'],
-            'delivery_fee'      => ['numeric'],
+            'id_payment'         => ['numeric'],
+            'delivery_fee'       => ['numeric'],
             'total_payment'      => ['numeric'],
-            'status_payment'          =>['in:paid,unpaid'],
+            'price'              => ['numeric'],
+            'status_payment'     =>['in:paid,unpaid'],
         ]);
 
         if ($validator->fails()){
@@ -114,6 +112,7 @@ class TransactionController extends Controller
         try {
             $transactions->update($request->all());
             $response = [
+                'code' => "200",
                 'message' => 'Transaction updated',
                 'data' => $transactions
             ];
@@ -121,6 +120,7 @@ class TransactionController extends Controller
             return response()->json($response, Response::HTTP_OK);
         } catch (QuearyException $e) {
             return response()->json([
+                'code' => "400",
                 'message' => "Failed" . $e->errorInfo
             ]);
         }
@@ -138,12 +138,14 @@ class TransactionController extends Controller
         try {
             $transactions->delete();
             $response = [
+                'code' => "200",
                 'message' => 'Success deleted',
             ];
 
             return response()->json($response, Response::HTTP_OK);
         } catch (QuearyException $e) {
             return response()->json([
+                'code' => "400",
                 'message' => "Failed" . $e->errorInfo
             ]);
         }

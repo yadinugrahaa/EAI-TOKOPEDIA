@@ -15,10 +15,10 @@ class DeliveryController extends Controller
      */
     public function index()
     {
-        $delivers = Deliver::orderBy('time', 'DESC')->get();
+        $seller = Deliver::orderBy('time', 'DESC')->get();
         $response = [
             'message' => 'Your request has been processed successfully',
-            'data' => $delivers
+            'data' => $seller 
         ];
 
         return response()->json($response, Response::HTTP_OK);
@@ -34,13 +34,13 @@ class DeliveryController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'id_transaction'   => ['numeric'],
+            'id_transactions'   => ['numeric'],
             'product_name'       => [],
             'buyer_address'         => [],
             'product_weight'      => ['numeric'],
             'delivery_fee'      => ['numeric'],
-            'status'          =>[''],
-            'no_resi'         =>[''],
+            'status'          =>[],
+            'no_resi'          =>[],
 
         ]);
 
@@ -95,14 +95,13 @@ class DeliveryController extends Controller
         $seller = Deliver::findOrFail($id);
 
         $validator = Validator::make($request->all(),[
-            'id_transaction'   => ['numeric'],
+            'id_transactions'   => ['numeric'],
             'product_name'       => [],
             'buyer_address'         => [],
             'product_weight'      => ['numeric'],
             'delivery_fee'      => ['numeric'],
-            'status'          =>[''],
-            'no_resi'         =>[''],
-
+            'status'          =>[],
+            'no_resi'          =>[],
         ]);
 
         if ($validator->fails()){
