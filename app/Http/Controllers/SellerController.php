@@ -17,6 +17,7 @@ class SellerController extends Controller
     {
         $seller = Seller::orderBy('time', 'DESC')->get();
         $response = [
+            'code' => "200",
             'message' => 'Your request has been processed successfully',
             'data' => $seller 
         ];
@@ -34,11 +35,10 @@ class SellerController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'seller_name'   => [],
-            'address'       => [],
-            'phone'         => ['numeric'],
-            'city'      => [''],
-            'postalcode'      => [''],
+            'seller_name'   => ['required'],
+            'address'       => ['required'],
+            'phone'         => ['required','numeric'],
+            'city'      => ['required'],
         ]);
 
         if ($validator->fails()){
@@ -95,11 +95,11 @@ class SellerController extends Controller
         $seller = Seller::findOrFail($id);
 
         $validator = Validator::make($request->all(),[
+            'id_delivery'   => ['numeric'],
             'seller_name'   => [],
             'address'       => [],
             'phone'         => ['numeric'],
-            'city'      => [''],
-            'postalcode'      => [''],
+            'district'      => [],
         ]);
 
         if ($validator->fails()){
@@ -136,7 +136,7 @@ class SellerController extends Controller
             $seller->delete();
             $response = [
                 'code' => "200",
-                'message' => 'Success deleted'
+                'message' => 'Success deleted',
             ];
 
             return response()->json($response, Response::HTTP_OK);
