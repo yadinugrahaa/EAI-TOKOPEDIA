@@ -35,11 +35,12 @@ class SellerController extends Controller
     {
         $validator = Validator::make($request->all(),[
             'id_delivery'   => ['numeric'],
-            'seller_name'   => ['required'],
-            'address'       => ['required'],
-            'phone'         => ['required','numeric'],
-            'city'      => ['required'],
-            'type'          =>['required','in:active, non-active'],
+            'id_transaction' => ['numeric'],
+            'seller_name'   => [],
+            'address'       => [],
+            'phone'         => ['numeric'],
+            'city'      => [''],
+            'postalcode'      => [''],
         ]);
 
         if ($validator->fails()){
@@ -94,11 +95,12 @@ class SellerController extends Controller
 
         $validator = Validator::make($request->all(),[
             'id_delivery'   => ['numeric'],
+            'id_transaction' => ['numeric'],
             'seller_name'   => [],
             'address'       => [],
             'phone'         => ['numeric'],
-            'district'      => [],
-            'type'          =>['in:active,non-active'],
+            'city'      => [''],
+            'postalcode'      => [''],
         ]);
 
         if ($validator->fails()){
