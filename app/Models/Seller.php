@@ -11,7 +11,7 @@ class Seller extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['id_delivery','id_transaction','seller_name','address','phone','city','postalcode','time'];
+    protected $fillable = ['seller_name','address','phone','city','postalcode','time'];
 
 
 }

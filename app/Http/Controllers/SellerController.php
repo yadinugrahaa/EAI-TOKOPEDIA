@@ -94,8 +94,6 @@ class SellerController extends Controller
         $seller = Seller::findOrFail($id);
 
         $validator = Validator::make($request->all(),[
-            'id_delivery'   => ['numeric'],
-            'id_transaction' => ['numeric'],
             'seller_name'   => [],
             'address'       => [],
             'phone'         => ['numeric'],
