@@ -16,8 +16,10 @@ class CreatePaymentsTable extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->string('id_orders');
-            $table->string('nominal_payment');
-            $table->timestamp('time')->default(now());
+            $table->integer('price');
+            $table->integer('delivery_fee');
+            $table->integer('nominal')-> default(null);
+            $table->timestamp('tanggal_transaksi')->default(now());
             $table->enum('status_payment',['paid','unpaid']);
             $table->timestamps();
         });
