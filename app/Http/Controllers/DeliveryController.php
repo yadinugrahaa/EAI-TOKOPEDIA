@@ -39,7 +39,8 @@ class DeliveryController extends Controller
             'buyer_address'         => [],
             'product_weight'      => ['numeric'],
             'delivery_fee'      => ['numeric'],
-            'status'          =>['in:delivered,onprocess'],
+            'status'          =>[],
+            'no_resi'          =>[],
 
         ]);
 
@@ -99,7 +100,8 @@ class DeliveryController extends Controller
             'buyer_address'         => [],
             'product_weight'      => ['numeric'],
             'delivery_fee'      => ['numeric'],
-            'status'          =>['in:delivered,ongoing'],
+            'status'          =>[],
+            'no_resi'          =>[],
         ]);
 
         if ($validator->fails()){

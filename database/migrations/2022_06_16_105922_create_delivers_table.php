@@ -21,7 +21,8 @@ class CreateDeliversTable extends Migration
             $table->string('product_weight');
             $table->string('delivery_fee');
             $table->timestamp('time')->default(now());
-            $table->enum('status',['delivered','onprocess']);
+            $table->string('status')-> default(null);;
+            $table->string('no_resi')-> default(null);;
             $table->timestamps();
         });
     }

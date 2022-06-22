@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Deliver extends Model
 {
     use HasFactory;
-    protected $fillable = ['id_transactions','product_name','buyer_address','product_weight','delivery_fee','time','status'];
+    protected $fillable = ['id_transactions','product_name','buyer_address','product_weight','delivery_fee','time','status','no_resi'];
 
 }
