@@ -15,7 +15,7 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        $seller = Payment::orderBy('time', 'DESC')->get();
+        $seller = Payment::orderBy('id', 'DESC')->get();
         $response = [
             'message' => 'Your request has been processed successfully',
             'data' => $seller 
@@ -57,13 +57,13 @@ class PaymentController extends Controller
         ]);
         if ($seller) {
             return response()->json([
-                'success' => true,
+                'code' => "200",
                 'message' => 'Payment Created',
                 'data' => $seller,
             ]);
         } else {
             return response()->json([
-                'success' => false,
+                'code' => "400",
                 'message' => 'Failed' 
             ]);
         }
@@ -81,6 +81,7 @@ class PaymentController extends Controller
 
         $seller = Payment::findOrFail($id);
         $response = [
+            'code' => "200",
             'message' => 'Detail or Data Resource',
             'data' => $seller
         ];
@@ -124,13 +125,13 @@ class PaymentController extends Controller
 
         if ($seller) {
             return response()->json([
-                'success' => true,
+                'code' => "200",
                 'message' => 'Payment Updated',
                 'data' => $seller,
             ]);
         } else {
             return response()->json([
-                'success' => false,
+                'code' => "400",
                 'message' => 'Failed' 
             ]);
         }
@@ -148,12 +149,14 @@ class PaymentController extends Controller
         try {
             $seller->delete();
             $response = [
+                'code' => "200",
                 'message' => 'Success deleted',
             ];
 
             return response()->json($response, Response::HTTP_OK);
         } catch (QueryException $e) {
             return response()->json([
+                'code' => "400",
                 'message' => "Failed" . $e->errorInfo
             ]);
         }

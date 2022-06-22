@@ -19,7 +19,7 @@ class CreatePaymentsTable extends Migration
             $table->integer('price');
             $table->integer('delivery_fee');
             $table->integer('nominal')-> default(null);
-            $table->timestamp('tanggal_transaksi')->default(now());
+            $table->date('tanggal_transaksi')->default(now());
             $table->enum('status_payment',['paid','unpaid']);
             $table->timestamps();
         });
