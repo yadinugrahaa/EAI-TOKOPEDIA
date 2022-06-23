@@ -1,11 +1,12 @@
 <?php
+
 namespace App\Http\Controllers;
-use App\Models\Payment;
+use App\Models\Deliver;
 use Illuminate\Http\Request;
 use Validator;
 use Symfony\Component\HttpFoundation\Response;
 
-class PaymentController extends Controller
+class DeliveryController extends Controller
 {  
     /**
      * Display a listing of the resource.
@@ -14,11 +15,10 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        $seller = Payment::orderBy('time', 'DESC')->get();
+        $delivers = Deliver::orderBy('time', 'DESC')->get();
         $response = [
-            'code' => "200",
             'message' => 'Your request has been processed successfully',
-            'data' => $seller 
+            'data' => $delivers
         ];
 
         return response()->json($response, Response::HTTP_OK);
@@ -34,9 +34,13 @@ class PaymentController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'id_orders'         => ['numeric'],
-            'nominal_payment'       => ['required','numeric'],
-            'status_payment'          =>['required','in:paid,unpaid'],
+            'id_transaction'   => ['numeric'],
+            'product_name'       => [],
+            'buyer_address'         => [],
+            'product_weight'      => ['numeric'],
+            'delivery_fee'      => ['numeric'],
+            'status'          =>[''],
+            'no_resi'         =>[''],
 
         ]);
 
@@ -45,17 +49,15 @@ class PaymentController extends Controller
         }
 
         try {
-            $seller = Payment::create($request->all());
+            $seller = Deliver::create($request->all());
             $response = [
-                'code' => "200",
-                'message' => 'Payment Created',
+                'message' => 'Delivery Created',
                 'data' => $seller
             ];
 
             return response()->json($response, Response::HTTP_CREATED);
         } catch (QuearyException $e) {
             return response()->json([
-                'code' => "400",
                 'message' => "Failed" . $e->errorInfo
             ]);
         }
@@ -71,10 +73,9 @@ class PaymentController extends Controller
     {
 
 
-        $seller = Payment::findOrFail($id);
+        $seller = Deliver::findOrFail($id);
         $response = [
-            'code' => "200",
-            'message' => 'Detail or Data Resource',
+            'message' => 'Detail or Data resource',
             'data' => $seller
         ];
 
@@ -91,12 +92,17 @@ class PaymentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $seller = Payment::findOrFail($id);
+        $seller = Deliver::findOrFail($id);
 
         $validator = Validator::make($request->all(),[
-            'id_orders'   => ['numeric'],
-            'nominal_payment'       => ['numeric'],
-            'status_payment'          =>['in:paid,unpaid'],
+            'id_transaction'   => ['numeric'],
+            'product_name'       => [],
+            'buyer_address'         => [],
+            'product_weight'      => ['numeric'],
+            'delivery_fee'      => ['numeric'],
+            'status'          =>[''],
+            'no_resi'         =>[''],
+
         ]);
 
         if ($validator->fails()){
@@ -106,15 +112,13 @@ class PaymentController extends Controller
         try {
             $seller->update($request->all());
             $response = [
-                'code' => "200",
-                'message' => 'Payment updated',
+                'message' => 'Delivery updated',
                 'data' => $seller
             ];
 
             return response()->json($response, Response::HTTP_OK);
         } catch (QuearyException $e) {
             return response()->json([
-                'code' => "400",
                 'message' => "Failed" . $e->errorInfo
             ]);
         }
@@ -128,18 +132,16 @@ class PaymentController extends Controller
      */
     public function destroy($id)
     {
-        $seller = Payment::findOrFail($id);
+        $seller = Deliver::findOrFail($id);
         try {
             $seller->delete();
             $response = [
-                'code' => "200",
                 'message' => 'Success deleted',
             ];
 
             return response()->json($response, Response::HTTP_OK);
         } catch (QuearyException $e) {
             return response()->json([
-                'code' => "400",
                 'message' => "Failed" . $e->errorInfo
             ]);
         }
