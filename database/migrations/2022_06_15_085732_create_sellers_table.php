@@ -17,7 +17,7 @@ class CreateSellersTable extends Migration
             $table->id();
             $table->string('seller_name');
             $table->string('address');
-            $table->double('phone');
+            $table->string('phone');
             $table->string('city');
             $table->string('postalcode');
             $table->timestamp('time')->default(now());
